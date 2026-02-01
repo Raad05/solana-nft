@@ -20,11 +20,18 @@ umi.use(signerIdentity(signer));
 (async () => {
   try {
     //1. Load image
+    const imgFile = await readFile("file path");
     //2. Convert image to generic file.
+    const umiImgFile = createGenericFile(imgFile, "file name", {
+      tags: [{ name: "contentType", value: "image/jpeg" }],
+    });
     //3. Upload image
-    // const image = ???
-    // const [myUri] = ???
-    // console.log("Your image URI: ", myUri);
+    const imgUri = await umi.uploader.upload([umiImgFile]).catch((err) => {
+      throw new Error(err);
+    });
+    const image = imgUri;
+    const [myUri] = image;
+    console.log("Your image URI: ", myUri);
   } catch (error) {
     console.log("Oops.. Something went wrong", error);
   }
