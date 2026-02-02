@@ -6,6 +6,7 @@ import {
   signerIdentity,
 } from "@metaplex-foundation/umi";
 import { irysUploader } from "@metaplex-foundation/umi-uploader-irys";
+import { readFile } from "fs/promises";
 
 // Create a devnet connection
 const umi = createUmi("https://api.devnet.solana.com");
@@ -20,27 +21,45 @@ umi.use(signerIdentity(signer));
   try {
     // Follow this JSON structure
     // https://docs.metaplex.com/programs/token-metadata/changelog/v1.0#json-structure
-    // const image = ???
-    // const metadata = {
-    //     name: "?",
-    //     symbol: "?",
-    //     description: "?",
-    //     image: "?",
-    //     attributes: [
-    //         {trait_type: '?', value: '?'}
-    //     ],
-    //     properties: {
-    //         files: [
-    //             {
-    //                 type: "image/png",
-    //                 uri: "?"
-    //             },
-    //         ]
-    //     },
-    //     creators: []
-    // };
-    // const myUri = ???
-    // console.log("Your metadata URI: ", myUri);
+    const imgFile = await readFile("file path");
+
+    const umiImgFile = createGenericFile(imgFile, "file name", {
+      tags: [{ name: "contentType", value: "image/jpeg" }],
+    });
+
+    const imgUri = await umi.uploader.upload([umiImgFile]).catch((err) => {
+      throw new Error(err);
+    });
+
+    const metadata = {
+      name: "ILN NFT",
+      symbol: "INFT",
+      description: "Proof that you are part of the ILN community",
+      image: imgUri[0],
+      attributes: [
+        {
+          trait_type: {
+            memberType: "Elite",
+            permissions: "all",
+          },
+          value: "100",
+        },
+      ],
+      properties: {
+        files: [
+          {
+            type: "image/png",
+            uri: "file path",
+          },
+        ],
+      },
+      creators: ["Gn1uJAErn2taWrEiegyhwvqgEH81FMvK5vL5ezQXCpzW"],
+    };
+
+    const myUri = await umi.uploader.uploadJson(metadata).catch((err) => {
+      throw new Error(err);
+    });
+    console.log("Your metadata URI: ", myUri);
   } catch (error) {
     console.log("Oops.. Something went wrong", error);
   }
