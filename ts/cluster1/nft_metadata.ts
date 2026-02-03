@@ -38,17 +38,14 @@ umi.use(signerIdentity(signer));
       image: imgUri[0],
       attributes: [
         {
-          trait_type: {
-            memberType: "Elite",
-            permissions: "all",
-          },
+          trait_type: "Elite Status",
           value: "100",
         },
       ],
       properties: {
         files: [
           {
-            type: "image/png",
+            type: "image/jpeg",
             uri: "file path",
           },
         ],
