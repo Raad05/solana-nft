@@ -27,7 +27,7 @@ const mint = generateSigner(umi);
   let tx = createNft(umi, {
     mint,
     name: "ILN NFT",
-    uri: "",
+    uri: "https://gateway.irys.xyz/D9h2on2Qa2fYoK6M6fM6zYs1RNqfVXG6tqHjLiuVjXZ2",
     symbol: "ILNFT",
     sellerFeeBasisPoints: percentAmount(0),
     creators: [

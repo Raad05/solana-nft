@@ -20,10 +20,10 @@ umi.use(signerIdentity(signer));
 (async () => {
   try {
     //1. Load image
-    const imgFile = await readFile("file path");
+    const imgFile = await readFile("./assets/nft.png");
     //2. Convert image to generic file.
-    const umiImgFile = createGenericFile(imgFile, "file name", {
-      tags: [{ name: "contentType", value: "image/jpeg" }],
+    const umiImgFile = createGenericFile(imgFile, "nft.png", {
+      tags: [{ name: "contentType", value: "image/png" }],
     });
     //3. Upload image
     const imgUri = await umi.uploader.upload([umiImgFile]).catch((err) => {

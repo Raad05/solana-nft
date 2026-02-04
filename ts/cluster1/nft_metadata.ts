@@ -1,12 +1,10 @@
 import wallet from "./wallet/wallet.json";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import {
-  createGenericFile,
   createSignerFromKeypair,
   signerIdentity,
 } from "@metaplex-foundation/umi";
 import { irysUploader } from "@metaplex-foundation/umi-uploader-irys";
-import { readFile } from "fs/promises";
 
 // Create a devnet connection
 const umi = createUmi("https://api.devnet.solana.com");
@@ -21,21 +19,14 @@ umi.use(signerIdentity(signer));
   try {
     // Follow this JSON structure
     // https://docs.metaplex.com/programs/token-metadata/changelog/v1.0#json-structure
-    const imgFile = await readFile("file path");
 
-    const umiImgFile = createGenericFile(imgFile, "file name", {
-      tags: [{ name: "contentType", value: "image/jpeg" }],
-    });
-
-    const imgUri = await umi.uploader.upload([umiImgFile]).catch((err) => {
-      throw new Error(err);
-    });
-
+    const image =
+      "https://gateway.irys.xyz/F1Qy8w6iVDZUjTRXgzEDer2ZYx3x36Q752ReR2tUvyjT";
     const metadata = {
       name: "ILN NFT",
       symbol: "INFT",
       description: "Proof that you are part of the ILN community",
-      image: imgUri[0],
+      image: image,
       attributes: [
         {
           trait_type: "Elite Status",
@@ -45,12 +36,18 @@ umi.use(signerIdentity(signer));
       properties: {
         files: [
           {
-            type: "image/jpeg",
-            uri: "file path",
+            type: "image/png",
+            uri: image,
           },
         ],
       },
-      creators: ["Gn1uJAErn2taWrEiegyhwvqgEH81FMvK5vL5ezQXCpzW"],
+      creators: [
+        {
+          address: keypair.publicKey,
+          verified: true,
+          share: 100,
+        },
+      ],
     };
 
     const myUri = await umi.uploader.uploadJson(metadata).catch((err) => {
